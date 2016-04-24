@@ -49,14 +49,23 @@ public class MainActivityFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.action_refresh:
-                FetchMovieInfoTask fetchMovieInfoTask= new FetchMovieInfoTask();
-                fetchMovieInfoTask.execute();
+                updatePoster();
                 break;
         }
         return true;
     }
 
+    public void updatePoster(){
+        FetchMovieInfoTask fetchMovieInfoTask= new FetchMovieInfoTask();
+        fetchMovieInfoTask.execute();
 
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        updatePoster();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,21 +73,13 @@ public class MainActivityFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
         GridView gridView = (GridView) rootView.findViewById(R.id.poster_view);
 
-        ArrayList<String> test = new ArrayList<>();
-        //test.add(BitmapFactory.decodeResource(getResources(),R.drawable.sample));
-        test.add("test");
-        test.add("test1");
-        test.add("test2");
-        test.add("test3");
-
-
+        updatePoster();
 
         mPosterAdapter=new ArrayAdapter<>(
                 getActivity(),
                 R.layout.poster_item_list,
                 R.id.poster_view,
-                test
-        );
+                new ArrayList<String>());
 
         gridView.setAdapter(mPosterAdapter);
 
@@ -87,9 +88,9 @@ public class MainActivityFragment extends Fragment {
         return rootView;
     }
 
-    public class FetchMovieInfoTask extends AsyncTask<Void, Void, ArrayList<String[]>> {
+    public class FetchMovieInfoTask extends AsyncTask<Void, Void, String[]> {
         private final String LOG_TAG = FetchMovieInfoTask.class.getSimpleName();
-        public ArrayList<String[]> getMovieInfoFromJson(String movieInfoJsonStr) throws Exception{
+        public String[] getMovieInfoFromJson(String movieInfoJsonStr) throws Exception{
             ArrayList<String[]> movieInfoResultArray = new ArrayList<>();
 
             final String MI_RESULT="results";
@@ -99,6 +100,7 @@ public class MainActivityFragment extends Fragment {
             final String MI_SYNOPSIS="overview";
             final String MI_USER_RATING="vote_average";
             final String MI_RELEASE_DATE="release_date";
+            final String POSTER_PATH="http://image.tmdb.org/t/p/w185";
 
 
             JSONObject movieInfoObject=new JSONObject(movieInfoJsonStr);
@@ -116,7 +118,7 @@ public class MainActivityFragment extends Fragment {
 
                 JSONObject movieInfo = movieInfoJsonArray.getJSONObject(i);
 
-                posterArray[i]=movieInfo.getString(MI_POSTER_PATH);
+                posterArray[i]=POSTER_PATH+movieInfo.getString(MI_POSTER_PATH);
                 titleArray[i]=movieInfo.getString(MI_ORIGINAL_TITLE);
                 overviewArray[i]=movieInfo.getString(MI_SYNOPSIS);
                 ratingArray[i]=movieInfo.getString(MI_USER_RATING);
@@ -131,12 +133,10 @@ public class MainActivityFragment extends Fragment {
 
             }
 
-            return movieInfoResultArray;
+            return posterArray;
         }
-
-
         @Override
-        protected ArrayList<String[]> doInBackground(Void... params) {
+        protected String[] doInBackground(Void... params) {
 //            if(params.length==0){
 //                return null;
 //            }
@@ -197,13 +197,30 @@ public class MainActivityFragment extends Fragment {
 
             }
 
-                try {
+            try {
+                for(String k: getMovieInfoFromJson(movieInfoJsonStr)){
+                    Log.v("RETURNED STRING",k);
+                }
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
                     return getMovieInfoFromJson(movieInfoJsonStr);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
             return null;
+        }
+        @Override
+        protected void onPostExecute(String[] posterPath){
+            if(posterPath!=null){
+                mPosterAdapter.clear();
+                mPosterAdapter.addAll(posterPath);
+            }
         }
 
 
