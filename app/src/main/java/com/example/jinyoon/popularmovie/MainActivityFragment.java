@@ -1,8 +1,10 @@
 package com.example.jinyoon.popularmovie;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -54,7 +56,9 @@ public class MainActivityFragment extends Fragment {
 
     public void updatePoster(){
         FetchMovieInfoTask fetchMovieInfoTask= new FetchMovieInfoTask();
-        fetchMovieInfoTask.execute();
+        SharedPreferences spr = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String path = spr.getString(getString(R.string.pref_general_key), getString(R.string.pref_general_default));
+        fetchMovieInfoTask.execute(path);
 
     }
 
@@ -75,7 +79,7 @@ public class MainActivityFragment extends Fragment {
         return rootView;
     }
 
-    public class FetchMovieInfoTask extends AsyncTask<Void, Void, String[]> {
+    public class FetchMovieInfoTask extends AsyncTask<String, Void, String[]> {
         private final String LOG_TAG = FetchMovieInfoTask.class.getSimpleName();
         public String[] getMovieInfoFromJson(String movieInfoJsonStr) throws Exception{
             ArrayList<String[]> movieInfoResultArray = new ArrayList<>();
@@ -123,7 +127,7 @@ public class MainActivityFragment extends Fragment {
             return posterArray;
         }
         @Override
-        protected String[] doInBackground(Void... params) {
+        protected String[] doInBackground(String... params) {
 //            if(params.length==0){
 //                return null;
 //            }
@@ -133,7 +137,7 @@ public class MainActivityFragment extends Fragment {
 
             try {
                 final String BASE_URL = "http://api.themoviedb.org/3/movie";
-                final String PREF_PATH = "popular";
+                final String PREF_PATH = params[0];
                 final String APIKEY_PARAM="api_key";
 
                 Uri buildUri = Uri.parse(BASE_URL).buildUpon()
