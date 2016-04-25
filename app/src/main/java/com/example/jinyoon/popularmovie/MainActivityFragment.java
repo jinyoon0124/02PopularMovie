@@ -11,7 +11,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 
 import org.json.JSONArray;
@@ -22,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -30,8 +28,8 @@ import java.util.ArrayList;
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
-    ArrayAdapter<String> mPosterAdapter;
-
+    ImageListAdapter mPosterAdapter;
+    GridView gridView;
     public MainActivityFragment() {
     }
 
@@ -44,7 +42,6 @@ public class MainActivityFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         inflater.inflate(R.menu.movie_fragment, menu);
     }
-
 
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
@@ -71,19 +68,9 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        GridView gridView = (GridView) rootView.findViewById(R.id.poster_view);
+        gridView = (GridView) rootView.findViewById(R.id.poster_view);
 
         updatePoster();
-
-        mPosterAdapter=new ArrayAdapter<>(
-                getActivity(),
-                R.layout.poster_item_list,
-                R.id.poster_view,
-                new ArrayList<String>());
-
-        gridView.setAdapter(mPosterAdapter);
-
-
 
         return rootView;
     }
@@ -162,14 +149,14 @@ public class MainActivityFragment extends Fragment {
                 httpURLConnection.connect();
 
                 InputStream inputStream = httpURLConnection.getInputStream();
-                StringBuffer buffer = new StringBuffer();
+                StringBuilder buffer = new StringBuilder();
 
                 reader = new BufferedReader(new InputStreamReader(inputStream));
 
                 String line;
 
                 if((line=reader.readLine())!=null){
-                    buffer.append(line+"\n");
+                    buffer.append(line).append("\n");
                 }
 
                 if(buffer.length()==0){
@@ -178,8 +165,6 @@ public class MainActivityFragment extends Fragment {
 
                 movieInfoJsonStr=buffer.toString();
 
-            } catch (MalformedURLException e) {
-                Log.e(LOG_TAG, "error", e);
             } catch (IOException e) {
                 Log.e(LOG_TAG, "error", e);
 
@@ -197,15 +182,6 @@ public class MainActivityFragment extends Fragment {
 
             }
 
-            try {
-                for(String k: getMovieInfoFromJson(movieInfoJsonStr)){
-                    Log.v("RETURNED STRING",k);
-                }
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
             try {
                     return getMovieInfoFromJson(movieInfoJsonStr);
@@ -216,16 +192,18 @@ public class MainActivityFragment extends Fragment {
             return null;
         }
         @Override
-        protected void onPostExecute(String[] posterPath){
-            if(posterPath!=null){
-                mPosterAdapter.clear();
-                mPosterAdapter.addAll(posterPath);
-            }
+        protected void onPostExecute(String[] posterPath) {
+            mPosterAdapter=new ImageListAdapter(
+                    getActivity(),
+                    posterPath
+                    );
+            gridView.setAdapter(mPosterAdapter);
         }
-
+        }
 
     }
 
-}
+
+
 
 
