@@ -37,8 +37,8 @@ public class DetailActivityFragment extends Fragment {
                     .into(posterImageView);
             titleTextView.setText(movieInfo.getTitle());
             synopsisTextView.setText(movieInfo.getSynopsis());
-            ratingTextView.setText(movieInfo.getRating());
-            dateTextView.setText(movieInfo.getReleaseDate());
+            ratingTextView.setText(String.format(getString(R.string.user_rating),movieInfo.getRating()));
+            dateTextView.setText(String.format(getString(R.string.release_date),movieInfo.getReleaseDate()));
 
         }
 

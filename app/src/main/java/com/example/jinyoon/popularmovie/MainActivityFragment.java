@@ -131,9 +131,9 @@ public class MainActivityFragment extends Fragment {
         @Override
         protected MovieInfo[] doInBackground(String... params) {
 
-//            if(params.length==0){
-//                return null;
-//            }
+            if(params.length==0){
+                return null;
+            }
             HttpURLConnection httpURLConnection=null;
             BufferedReader reader=null;
             String movieInfoJsonStr=null;

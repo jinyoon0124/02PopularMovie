@@ -42,48 +42,48 @@
         android:layout_below="@+id/detail_movie_title"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/detail_movie_title"
-        android:layout_alignStart="@+id/detail_movie_title"
-        android:layout_below="@+id/detail_movie_synopsis"
-        android:text="@string/user_rating"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/colorText"
-        android:textStyle="bold" />
+    <!--<TextView-->
+        <!--android:id="@+id/textView2"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignLeft="@+id/detail_movie_title"-->
+        <!--android:layout_alignStart="@+id/detail_movie_title"-->
+        <!--android:layout_below="@+id/detail_movie_synopsis"-->
+        <!--android:text="@string/user_rating"-->
+        <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+        <!--android:textColor="@color/colorText"-->
+        <!--android:textStyle="bold" />-->
 
     <TextView
         android:id="@+id/detail_movie_rating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textView2"
-        android:layout_toEndOf="@+id/textView2"
-        android:layout_toRightOf="@+id/textView2"
+        android:layout_alignLeft="@+id/detail_movie_title"
+        android:layout_alignStart="@+id/detail_movie_title"
+        android:layout_below="@+id/detail_movie_synopsis"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/colorText"
         android:textStyle="bold"/>
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/detail_movie_title"
-        android:layout_alignStart="@+id/detail_movie_title"
-        android:layout_below="@+id/textView2"
-        android:text="@string/release_date"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:textColor="@color/colorText"
-        android:textStyle="bold" />
+    <!--<TextView-->
+        <!--android:id="@+id/textView3"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_alignLeft="@+id/detail_movie_title"-->
+        <!--android:layout_alignStart="@+id/detail_movie_title"-->
+        <!--android:layout_below="@+id/textView2"-->
+        <!--android:text="@string/release_date"-->
+        <!--android:textAppearance="?android:attr/textAppearanceSmall"-->
+        <!--android:textColor="@color/colorText"-->
+        <!--android:textStyle="bold" />-->
 
     <TextView
         android:id="@+id/detail_movie_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textView3"
-        android:layout_toEndOf="@+id/textView3"
-        android:layout_toRightOf="@+id/textView3"
+        android:layout_alignLeft="@+id/detail_movie_title"
+        android:layout_alignStart="@+id/detail_movie_title"
+        android:layout_below="@+id/detail_movie_rating"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/colorText"
         android:textStyle="bold" />

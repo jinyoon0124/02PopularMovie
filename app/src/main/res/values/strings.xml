@@ -21,7 +21,7 @@
         <item>top_rated</item>
     </string-array>
     <string name="title_activity_detail">Movie Info</string>
-    <string name="user_rating">User Rating: </string>
-    <string name="release_date">Release Date: </string>
+    <string name="user_rating">User Rating: %1$s</string>
+    <string name="release_date">Release Date: %1$s</string>
     <string name="poster_imageview_description">poster will be added here</string>
 </resources>
