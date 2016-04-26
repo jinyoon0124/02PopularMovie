@@ -1,5 +1,6 @@
 package com.example.jinyoon.popularmovie;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -13,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import org.json.JSONArray;
@@ -74,6 +76,16 @@ public class MainActivityFragment extends Fragment {
         gridView = (GridView) rootView.findViewById(R.id.poster_view);
 
         updatePoster();
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                MovieInfo movieInfo = (MovieInfo) parent.getItemAtPosition(position);
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra("OBJECT_EXTRA", movieInfo);
+                startActivity(intent);
+            }
+        });
 
         return rootView;
     }
@@ -186,7 +198,6 @@ public class MainActivityFragment extends Fragment {
 
             return null;
         }
-
         @Override
         protected void onPostExecute(MovieInfo[] movieInfo) {
 
