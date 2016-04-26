@@ -24,7 +24,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -79,10 +78,9 @@ public class MainActivityFragment extends Fragment {
         return rootView;
     }
 
-    public class FetchMovieInfoTask extends AsyncTask<String, Void, String[]> {
+    public class FetchMovieInfoTask extends AsyncTask<String, Void, MovieInfo[]> {
         private final String LOG_TAG = FetchMovieInfoTask.class.getSimpleName();
-        public String[] getMovieInfoFromJson(String movieInfoJsonStr) throws Exception{
-            ArrayList<String[]> movieInfoResultArray = new ArrayList<>();
+        public MovieInfo[] getMovieInfoFromJson(String movieInfoJsonStr) throws Exception{
 
             final String MI_RESULT="results";
             final String MI_ID="id";
@@ -94,40 +92,33 @@ public class MainActivityFragment extends Fragment {
             final String POSTER_PATH="http://image.tmdb.org/t/p/w185";
 
 
-            JSONObject movieInfoObject=new JSONObject(movieInfoJsonStr);
-            JSONArray movieInfoJsonArray=movieInfoObject.getJSONArray(MI_RESULT);
+            JSONObject movieInfoJsonObject=new JSONObject(movieInfoJsonStr);
+            JSONArray movieInfoJsonArray=movieInfoJsonObject.getJSONArray(MI_RESULT);
 
-            String[] posterArray = new String[movieInfoJsonArray.length()];
-            String[] titleArray = new String[movieInfoJsonArray.length()];
-            String[] overviewArray= new String[movieInfoJsonArray.length()];
-            String[] ratingArray=new String[movieInfoJsonArray.length()];
-            String[] releaseArray=new String[movieInfoJsonArray.length()];
+            MovieInfo[] resultArray =new MovieInfo[movieInfoJsonArray.length()];
 
             for(int i=0; i<movieInfoJsonArray.length();i++){
 
-//                String id, poster_path, original_title, synopsis, user_rating, release_date;
+                MovieInfo movieInfo = new MovieInfo();
 
-                JSONObject movieInfo = movieInfoJsonArray.getJSONObject(i);
+                JSONObject movieInfoObject = movieInfoJsonArray.getJSONObject(i);
 
-                posterArray[i]=POSTER_PATH+movieInfo.getString(MI_POSTER_PATH);
-                titleArray[i]=movieInfo.getString(MI_ORIGINAL_TITLE);
-                overviewArray[i]=movieInfo.getString(MI_SYNOPSIS);
-                ratingArray[i]=movieInfo.getString(MI_USER_RATING);
-                releaseArray[i]=movieInfo.getString(MI_RELEASE_DATE);
+                movieInfo.setId(movieInfoObject.getString(MI_ID));
+                movieInfo.setPosterPath(POSTER_PATH+movieInfoObject.getString(MI_POSTER_PATH));
+                movieInfo.setTitle(movieInfoObject.getString(MI_ORIGINAL_TITLE));
+                movieInfo.setSynopsis(movieInfoObject.getString(MI_SYNOPSIS));
+                movieInfo.setRating(movieInfoObject.getString(MI_USER_RATING));
+                movieInfo.setReleaseDate(movieInfoObject.getString(MI_RELEASE_DATE));
 
-                movieInfoResultArray.add(posterArray);
-                movieInfoResultArray.add(titleArray);
-                movieInfoResultArray.add(overviewArray);
-                movieInfoResultArray.add(ratingArray);
-                movieInfoResultArray.add(releaseArray);
-
+                resultArray[i]=movieInfo;
 
             }
 
-            return posterArray;
+            return resultArray;
         }
         @Override
-        protected String[] doInBackground(String... params) {
+        protected MovieInfo[] doInBackground(String... params) {
+
 //            if(params.length==0){
 //                return null;
 //            }
@@ -186,28 +177,27 @@ public class MainActivityFragment extends Fragment {
 
             }
 
-
-            try {
+                try {
                     return getMovieInfoFromJson(movieInfoJsonStr);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
+
             return null;
         }
+
         @Override
-        protected void onPostExecute(String[] posterPath) {
+        protected void onPostExecute(MovieInfo[] movieInfo) {
+
             mPosterAdapter=new ImageListAdapter(
                     getActivity(),
-                    posterPath
+                    movieInfo
                     );
             gridView.setAdapter(mPosterAdapter);
         }
         }
-
     }
-
-
 
 
 

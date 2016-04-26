@@ -12,13 +12,13 @@ import com.squareup.picasso.Picasso;
 public class ImageListAdapter extends ArrayAdapter {
     private Context mContext;
     private LayoutInflater inflater;
-    private String[] imageUrls;
+    private MovieInfo[] movieInfo;
 
-    public ImageListAdapter(Context mContext, String[] imageUrls) {
-        super(mContext, R.layout.poster_item_list, imageUrls);
+    public ImageListAdapter(Context mContext, MovieInfo[] movieInfo) {
+        super(mContext, R.layout.poster_item_list, movieInfo);
 
         this.mContext=mContext;
-        this.imageUrls=imageUrls;
+        this.movieInfo=movieInfo;
 
         inflater=LayoutInflater.from(mContext);
     }
@@ -29,7 +29,7 @@ public class ImageListAdapter extends ArrayAdapter {
         }
         Picasso
                 .with(mContext)
-                .load(imageUrls[position])
+                .load(movieInfo[position].getPosterPath())
                 .into((ImageView)convertView);
         return convertView;
     }
